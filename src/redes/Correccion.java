@@ -7,6 +7,7 @@ package redes;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import javax.swing.JOptionPane;
 import static redes.Hamming.getIndexC;
 import static redes.Hamming.getValueOfC;
 
@@ -67,7 +68,7 @@ public class Correccion {
     
     
     
-    public void verifyErrors() {
+    public String verifyErrors() {
         generatePalAndCValues();
         BitSet res = Hamming.stringToBitSet(pal);
         ArrayList<Boolean> obt = new ArrayList<>();
@@ -89,16 +90,25 @@ public class Correccion {
             k*=2;
         }
         if(bitErr == 0){
-            System.out.println("No hay bit errado");
+            JOptionPane.showMessageDialog(null,"El mensaje está correcto",
+                    "Correccion", JOptionPane.INFORMATION_MESSAGE);
+            return toAscii(pal);
         }
         else{
+            JOptionPane.showMessageDialog(null,"Hay un error en el bit "+ bitErr,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"El error ha sido corregido",
+                    "Solucionado", JOptionPane.INFORMATION_MESSAGE);
+            
             System.out.println("El bit errado es "+ bitErr);
+            return null;
         }
-        
-        
-        
-
-        
+    }
+    
+    public static String toAscii(String bin){
+        int charCode = Integer.parseInt(bin, 2);
+        String str = new Character((char)charCode).toString();
+        return str;
     }
 
     public String arrToBin(ArrayList<Boolean> code) {

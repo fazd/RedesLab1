@@ -21,21 +21,25 @@ public class Redes {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        /*Scanner scan = new Scanner(System.in);
+    public static void main(String[] args) throws FileNotFoundException {
+        File f = new File("prueba1.txt");
+        Scanner scan = new Scanner(f);
         String mes = scan.nextLine();
         Hamming hamm = new Hamming(mes);
         try {
-            hamm.createMessageFile();
+            hamm.createMessageFile("prueba1");
         } catch (IOException ex) {
             System.out.println("Hubo algun error");
-        }*/
-        File f = new File("prueba.ham");
+        }
+        System.out.println("-------------------------------------------");
+        f = new File("prueba1.ham");
         try {
             Scanner scanf = new Scanner(f);
-            String line = scanf.nextLine();
-            Correccion cr = new Correccion(line);
-            cr.verifyErrors();
+            while(scanf.hasNext()){
+                String line = scanf.nextLine();
+                Correccion cr = new Correccion(line);
+                cr.verifyErrors();
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Redes.class.getName()).log(Level.SEVERE, null, ex);
         }

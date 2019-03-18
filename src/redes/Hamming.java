@@ -28,26 +28,35 @@ public class Hamming {
     }
     
     
-    public void createMessageFile() throws IOException{
-        String bin = wordToBit();
-        BitSet res = stringToBitSet(bin);
-        long c = calculateNumberC(bin.length());
-        ArrayList<Boolean> cValues = new ArrayList<>();
-        for(int i = 1; i <=c; i++){
-            ArrayList<Integer> cIndex = getIndexC(i,bin.length());
-            boolean cAux = getValueOfC(cIndex, bin);
-            cValues.add(cAux);
-            
-        
+    public File createMessageFile(String nombre) throws IOException{
+        ArrayList<String> solucion = new ArrayList<>();
+        for(int t = 0; t < this.message.length(); t++){            
+            String bin = wordToBit(""+this.message.charAt(t));
+            //BitSet res = stringToBitSet(bin);
+            long c = calculateNumberC(bin.length());
+            ArrayList<Boolean> cValues = new ArrayList<>();
+            for(int i = 1; i <=c; i++){
+                ArrayList<Integer> cIndex = getIndexC(i,bin.length());
+                boolean cAux = getValueOfC(cIndex, bin);
+                cValues.add(cAux);
+
+
+            }
+            ArrayList<Boolean> codeWord = Hamming.getCodeWord(cValues, bin, bin.length());
+            System.out.println("El codeword será: "+ arrToBin(codeWord));
+            solucion.add(arrToBin(codeWord));
+
         }
-        ArrayList<Boolean> codeWord = Hamming.getCodeWord(cValues, res, res.length());
-        System.out.println("El codeword será: "+ arrToBin(codeWord));
-        File f  = new File("prueba.ham");
+        File f  = new File(nombre+".ham");
         BufferedWriter bf = new BufferedWriter(new FileWriter(f));
-        bf.write(arrToBin(codeWord));
+        for(String s : solucion){
+            bf.write(s);
+            bf.newLine();
+        }
         bf.close();
         System.out.println("El archivo ha sido creado exitosamente en: ");
         System.out.println(f.getCanonicalPath());
+        return f;
     }
     
     public String arrToBin(ArrayList<Boolean> code){
@@ -78,7 +87,7 @@ public class Hamming {
         return newBin;
     }
     
-    private  String wordToBit(){
+    private  String wordToBit(String message){
         String bin = "";
         for (int i = 0; i < message.length(); i++) {
             String norm = normalize(Integer.toBinaryString(message.charAt(i)));
@@ -86,7 +95,7 @@ public class Hamming {
             //System.out.println("La letra "+ str.charAt(i)+" es "+ 
             //        norm );
         }
-        System.out.println("El binario es: "+ bin);
+        System.out.println("El binario es: "+ bin+ " y el mensaje es "+ message);
         return bin;
     }
     
@@ -162,7 +171,7 @@ public class Hamming {
     }
     
     
-    public static ArrayList<Boolean> getCodeWord(ArrayList<Boolean> c,BitSet cod, int length){
+    public static ArrayList<Boolean> getCodeWord(ArrayList<Boolean> c,String  cod, int length){
         int n = length + c.size();
         ArrayList<Boolean> codeWord = new ArrayList<>();
         //BitSet codeWord = new  BitSet(n);
@@ -179,7 +188,7 @@ public class Hamming {
                 point*=2;
             }
             else{
-                codeWord.add(cod.get(idx));
+                codeWord.add('1'==cod.charAt(idx));
                 //System.out.println("El valor que se agregó es: "+cod.get(contc) );
                 idx--;
             }
